@@ -61,9 +61,30 @@ function guardarCliente() {
     }
 
     function obtenerPlatos() {
-        fetch()
-            
+        const url = "http://localhost:3000/platillos";
+        fetch(url)
+            .then((result) => {
+                return result.json();
+            }).then((result) => {
+                mostrarPlatos(result);
+            });
     }
 }
 
+function mostrarPlatos(comidas) {
+    const contenido = document.querySelector("#platillos .contenido");
+
+    comidas.forEach(comida => {
+        const row = document.createElement("DIV");
+        row.classList.add("row");
+
+        const nombre = document.createElement("DIV");
+        nombre.classList.add("col-md-4");
+        nombre.textContent = comida.nombre;
+
+        row.appendChild(nombre);
+
+        contenido.appendChild(row);
+    });
+}
 

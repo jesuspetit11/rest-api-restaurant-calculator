@@ -4,6 +4,12 @@ let cliente = {
     pedido: []
 }
 
+const categorias = {
+    1: "Comidas",
+    2: "Bebidas", 
+    3: "Postres"
+}
+
 const btnGuardarCliente = document.querySelector("#guardar-cliente");
 btnGuardarCliente.addEventListener("click", guardarCliente);
 
@@ -38,6 +44,7 @@ function guardarCliente() {
 }
     //Llenamos nuestro objeto de cliente si se pasan las validaciones
     cliente = {...cliente, mesa, hora};
+    //Para usar asignación dinámica le tendríamos que agregar un eventListener a las variables
     // console.log(cliente);   
 
     //Una vez que se agregan los datos al obj quitamos el modal
@@ -76,15 +83,52 @@ function mostrarPlatos(comidas) {
 
     comidas.forEach(comida => {
         const row = document.createElement("DIV");
-        row.classList.add("row");
+        row.classList.add("row", "py-3","border-top");
 
         const nombre = document.createElement("DIV");
         nombre.classList.add("col-md-4");
         nombre.textContent = comida.nombre;
 
-        row.appendChild(nombre);
+        const precio = document.createElement("DIV");
+        precio.classList.add("col-md-3", "fw-bold");
+        precio.textContent = `$${comida.precio}`;
 
+        const categoria = document.createElement("DIV");
+        categoria.classList.add("col-md-3");
+        categoria.textContent = categorias[comida.categoria];
+
+        const inputCantidad = document.createElement("INPUT");
+        inputCantidad.type = 'number';
+        inputCantidad.min = 0;
+        inputCantidad.value = 0;
+        inputCantidad.id = `producto-${comida.id}`;
+        inputCantidad.classList.add("form-control");
+
+        //Función que detecta la cantidad y la comida que se agrega
+        //Le asociamos un evento al input
+        inputCantidad.onchange =function() {
+            const cantidad = parseInt(inputCantidad.value); //Lo convertimos a number
+            agregarPlatillo({...comida, cantidad}); //Le pasamos un obj, en este caso un spred operator de comida
+            //Le pasamos el spred operator para que quede como un objeto junto de comida y cantidad
+        }; /*Le agregamos este eventListener porque es un btn que se crea a partir de un script, no se le puede agregar un eventListener normal*/
+
+        
+        
+        const agregar = document.createElement("DIV");
+        agregar.classList.add("col-md-2");
+        agregar.appendChild(inputCantidad);
+        
+        
+        row.appendChild(nombre);
+        row.appendChild(precio);
+        row.appendChild(categoria);
+        row.appendChild(agregar);
+        
         contenido.appendChild(row);
     });
 }
 
+
+function agregarPlatillo(producto) {
+    console.log(producto);
+}
